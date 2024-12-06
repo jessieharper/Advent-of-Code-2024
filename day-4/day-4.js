@@ -13,6 +13,7 @@ readStream.on("data", (chunk) => {
 
 readStream.on("end", () => {
   const lines = data.trim().split("\n");
+  console.log(lines);
   const word = "MAS";
   wordSearch(lines, word);
 
