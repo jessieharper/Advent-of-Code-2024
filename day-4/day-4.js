@@ -2,7 +2,7 @@ const { count } = require("console");
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "test-data.csv");
+const filePath = path.join(__dirname, "data.csv");
 const readStream = fs.createReadStream(filePath);
 
 let data = "";
@@ -13,8 +13,8 @@ readStream.on("data", (chunk) => {
 
 readStream.on("end", () => {
   const lines = data.trim().split("\n");
-  console.log(lines);
-  const word = "MAS";
+
+  const word = "XMAS";
   wordSearch(lines, word);
 
   function wordSearch(grid, word) {
@@ -65,7 +65,33 @@ readStream.on("end", () => {
       }
     }
 
-    console.log(totalWords);
+    // Part Two:
+
+    let totalMas = 0;
+
+    for (let row = 0; row < totalRows; row++) {
+      for (let col = 0; col < totalCols; col++) {
+        if (grid[row]?.[col] === "A") {
+          const masOne =
+            (grid[row - 1]?.[col - 1] === "M" ||
+              grid[row + 1]?.[col + 1] === "M") &&
+            (grid[row + 1]?.[col + 1] === "S" ||
+              grid[row - 1]?.[col - 1] === "S");
+
+          const masTwo =
+            (grid[row + 1]?.[col - 1] === "M" ||
+              grid[row - 1]?.[col + 1] === "M") &&
+            (grid[row - 1]?.[col + 1] === "S" ||
+              grid[row + 1]?.[col - 1] === "S");
+
+          if (masOne && masTwo) {
+            totalMas++;
+          }
+        }
+      }
+    }
+
+    console.log(totalMas);
   }
 });
 
