@@ -65,17 +65,17 @@ readStream.on("end", () => {
         return count;
       }
 
-      // If blocked by an obstacle (not ".")
       if (grid[newRow][newCol] === "#") {
         console.log(
           `Blocked at: row ${newRow}, col ${newCol}. Changing direction.`
         );
-
-        const currentIndex = directions.findIndex(
+        // Blocked, gotta change direction
+        const directionIndex = directions.findIndex(
           (direction) =>
             direction[0] === rowDirection && direction[1] === colDirection
         );
-        const newDirection = directions[(currentIndex + 1) % directions.length];
+        const newDirection =
+          directions[(directionIndex + 1) % directions.length];
         return moveGuard(grid, col, row, newDirection, count);
       }
 
