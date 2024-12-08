@@ -66,11 +66,19 @@ const processFiles = () => {
     for (const ruleArr of parsedRules) {
       if (numArr.includes(ruleArr[0]) && numArr.includes(ruleArr[1])) {
         if (numArr.indexOf(ruleArr[0]) > numArr.indexOf(ruleArr[1])) {
-          return false;
+          const index1 = numArr.indexOf(ruleArr[0]);
+          const index2 = numArr.indexOf(ruleArr[1]);
+
+          let placeholder = numArr[index1];
+          numArr.splice(index1, 1, numArr[index2]);
+          numArr.splice(index2, 1, placeholder);
+
+          isValid(numArr);
+          return true;
         }
       }
     }
-    return true;
+    return false;
   }
 
   for (const numArr of parsedData) {
