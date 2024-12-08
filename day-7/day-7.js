@@ -30,7 +30,10 @@ readStream.on("end", () => {
       const numbers = line.slice(1); // rest of the nums
 
       const numOfOperators = numbers.length - 1; // n - 1 (number of operators needed)
-      const combinations = generateCombinations(["+", "*"], numOfOperators);
+      const combinations = generateCombinations(
+        ["+", "*", "||"],
+        numOfOperators
+      );
       // e.g if numOfOperators === 2: [["+", "+"], ["+", "*"], ["*", "+"], ["*", "*"]]
       // e.g if numOfOperators === 3:
       //  [
@@ -70,6 +73,9 @@ readStream.on("end", () => {
             result += numbers[i + 1];
           } else if (operators[i] === "*") {
             result *= numbers[i + 1];
+          } else if (operators[i] === "||") {
+            const concat = result.toString() + numbers[i + 1].toString();
+            result = +concat;
           }
         }
 
