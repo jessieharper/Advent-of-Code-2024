@@ -17,38 +17,33 @@ readStream.on("end", () => {
   }
 
   function processInstructions(data) {
-    let mulEnabled = true;
     const regexMul = /mul\((\d+),(\d+)\)/g;
+    const regexDont = /don\'t\(\)/;
+    const regexDo = /do\(\)/;
+
     let position = 0;
 
-    while (position < data.length) {
-      // Look for do() or don't()
-      if (data.slice(position).match(/don\'t\(\)/)) {
-        mulEnabled = false;
-        position += 6;
-      } else if (data.slice(position).match(/do\(\)/)) {
-        mulEnabled = true;
+    while (data.length > 0) {
+      let disabled = data.match(regexDont).index;
+      let enabled = data.match(regexDo).index;
 
-        position += 3;
-      } else {
-        // Look for mul(x,y)
-        const mulMatch = data.slice(position).match(regexMul);
+      if (disabled && disabled < enabled) {
+        position = disabled.index;
+
+        let mulMatch = data.slice(0, position).match(regexMul);
         if (mulMatch) {
           const numbers = mulMatch[0].match(/\d+/g);
           const test3 = numbers.map((num) => +num);
-
-          if (mulEnabled) {
-            mul(test3);
-          }
-
-          position += mulMatch[0].length;
-        } else {
-          position++;
+          mul(test3);
         }
+        data = data.slice(position + 7);
+      } else {
+        console.log(enabled);
+        data = data.slice(position, enabled.index + 4);
+        console.log(data);
+        return data;
       }
     }
-
-    return total;
   }
 
   console.log(processInstructions(data));
